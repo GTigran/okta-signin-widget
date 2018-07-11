@@ -86,7 +86,6 @@ module.exports = function (outputFilename) {
             return path.resolve(TARGET_JS, 'shared', file);
           }).concat([
             /moment-tz/,
-            /vendor\/plugins\/vkbeautify/,
             /vendor\/plugins\/jquery.simplemodal/,
             /vendor\/plugins\/spin/,
             'jqueryui',
