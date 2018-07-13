@@ -111,7 +111,27 @@ describe('Dev Mode flows', function() {
         oidcApp = new OIDCAppPage();
 
     primaryAuth.loginToForm('{{{WIDGET_BASIC_USER}}}', '{{{WIDGET_BASIC_PASSWORD}}}');
-    oidcApp.callParseTokensWithDefaultHandlers();
+    oidcApp.callParseAndStoreTokens();
+    expect(oidcApp.getIdTokenUser()).toBe('Saml Jackson');
+  });
+
+  it('can parse tokens from the url with default handlers given token keys', function() {
+    setup({
+      baseUrl: '{{{WIDGET_TEST_SERVER}}}',
+      clientId: '{{{WIDGET_CLIENT_ID}}}',
+      redirectUri: 'http://localhost:3000/done',
+      authParams: {
+        responseType: 'id_token',
+        display: 'page',
+        scope: ['openid', 'email', 'profile']
+      }
+    });
+
+    var primaryAuth = new PrimaryAuthPage(),
+        oidcApp = new OIDCAppPage();
+
+    primaryAuth.loginToForm('{{{WIDGET_BASIC_USER}}}', '{{{WIDGET_BASIC_PASSWORD}}}');
+    oidcApp.callParseAndStoreTokensGivenKeys({ accessToken: 'my-access-token', idToken: 'my-id-token' });
     expect(oidcApp.getIdTokenUser()).toBe('Saml Jackson');
   });
 
@@ -134,7 +154,7 @@ describe('Dev Mode flows', function() {
 
     // Remove the hash fragment from the URL
     oidcApp.changeRedirectUriState('fakeState123');
-    oidcApp.callParseTokensWithDefaultHandlers();
+    oidcApp.callParseAndStoreTokens();
     expectToFindLogMessage('OAuth flow response state doesn\'t match request state');
   });
 

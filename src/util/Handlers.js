@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018-Present, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -14,7 +14,7 @@ define(['util/Logger'], function (Logger) {
 
   var Handlers = {};
 
-  Handlers.defaultSuccessTokenHandler = function(tokenManager) {
+  Handlers.defaultSuccessTokenHandler = function(tokenManager, keys) {
     /**
      * Default success handler which is normally invoked when
      * `parseTokenFromUrl` is called. This success handler will
@@ -25,9 +25,9 @@ define(['util/Logger'], function (Logger) {
       var tokens = Array.isArray(res) ? res : [res];
       for (var i = 0; i < tokens.length; ++i) {
         if (tokens[i].idToken) {
-          tokenManager.add('idToken', tokens[i]);
+          tokenManager.add(keys.idToken, tokens[i]);
         } else if (tokens[i].accessToken) {
-          tokenManager.add('accessToken', tokens[i]);
+          tokenManager.add(keys.accessToken, tokens[i]);
         }
       }
     };

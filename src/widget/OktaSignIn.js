@@ -141,7 +141,24 @@ var OktaSignIn = (function () {
      * @param error - error callback function (usually the same as passed to render)
      */
     function parseTokensFromUrl(success, error) {
-      var successHandler = success || handlers.defaultSuccessTokenHandler(authClient.tokenManager);
+      authClient.token.parseFromUrl()
+      .then(success)
+      .fail(error);
+    }
+
+    /**
+     * Parses tokens from the url and stores tokens based on given keys
+     * @param keys - optional naming keys for storing tokens
+     * @param success - optional success callback function
+     * @param error - optional error callback function
+     */
+    function parseAndStoreTokensFromUrl(keys={}, success, error) {
+      var tokenKeys = {
+        accessToken: keys.accessToken || 'accessToken',
+        idToken: keys.idToken || 'idToken'
+      };
+
+      var successHandler = success || handlers.defaultSuccessTokenHandler(authClient.tokenManager, tokenKeys);
       var errorHandler = error || handlers.defaultErrorHandler();
 
       return authClient.token.parseFromUrl()
@@ -164,7 +181,8 @@ var OktaSignIn = (function () {
       },
       token: {
         hasTokensInUrl: hasTokensInUrl,
-        parseTokensFromUrl: parseTokensFromUrl
+        parseTokensFromUrl: parseTokensFromUrl,
+        parseAndStoreTokensFromUrl: parseAndStoreTokensFromUrl
       },
       tokenManager: authClient.tokenManager,
       hide: hide,
